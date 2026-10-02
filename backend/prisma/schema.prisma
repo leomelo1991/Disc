@@ -1,0 +1,229 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/infra/prisma/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  RECRUITER
+}
+
+enum Factor {
+  D
+  I
+  S
+  C
+}
+
+enum QuestionnaireStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum InvitationStatus {
+  PENDING
+  STARTED
+  COMPLETED
+  EXPIRED
+  REVOKED
+}
+
+model Tenant {
+  id             String       @id @default(uuid(7)) @db.Uuid
+  name           String
+  slug           String       @unique
+  createdAt      DateTime     @default(now()) @db.Timestamptz
+  retentionDays  Int          @default(365)
+  /// Empresa criada pela página pública de apresentação: sem usuários que possam logar, apagada após 7 dias.
+  isPresentation Boolean      @default(false)
+  users          User[]
+  invitations    Invitation[]
+  submissions    Submission[]
+  candidates     Candidate[]
+
+  @@index([isPresentation, createdAt])
+  @@map("tenant")
+}
+
+model User {
+  id            String         @id @default(uuid(7)) @db.Uuid
+  tenantId      String         @db.Uuid
+  name          String
+  email         String
+  passwordHash  String
+  role          Role
+  active        Boolean        @default(true)
+  createdAt     DateTime       @default(now()) @db.Timestamptz
+  tenant        Tenant         @relation(fields: [tenantId], references: [id])
+  invitations   Invitation[]
+  refreshTokens RefreshToken[]
+
+  @@unique([tenantId, email])
+  @@map("user")
+}
+
+model AssessmentType {
+  id             String          @id @default(uuid(7)) @db.Uuid
+  code           String          @unique
+  name           String
+  questionnaires Questionnaire[]
+
+  @@map("assessment_type")
+}
+
+model Questionnaire {
+  id               String              @id @default(uuid(7)) @db.Uuid
+  assessmentTypeId String              @db.Uuid
+  version          Int
+  status           QuestionnaireStatus @default(DRAFT)
+  publishedAt      DateTime?           @db.Timestamptz
+  assessmentType   AssessmentType      @relation(fields: [assessmentTypeId], references: [id])
+  groups           QuestionGroup[]
+  invitations      Invitation[]
+
+  @@unique([assessmentTypeId, version])
+  @@map("questionnaire")
+}
+
+model QuestionGroup {
+  id              String           @id @default(uuid(7)) @db.Uuid
+  questionnaireId String           @db.Uuid
+  position        Int
+  questionnaire   Questionnaire    @relation(fields: [questionnaireId], references: [id])
+  options         QuestionOption[]
+  answers         Answer[]
+
+  @@unique([questionnaireId, position])
+  @@map("question_group")
+}
+
+model QuestionOption {
+  id       String        @id @default(uuid(7)) @db.Uuid
+  groupId  String        @db.Uuid
+  label    String
+  factor   Factor
+  position Int
+  group    QuestionGroup @relation(fields: [groupId], references: [id])
+  answers  Answer[]
+
+  @@unique([groupId, factor])
+  @@map("question_option")
+}
+
+model Invitation {
+  id               String           @id @default(uuid(7)) @db.Uuid
+  tenantId         String           @db.Uuid
+  questionnaireId  String           @db.Uuid
+  createdById      String           @db.Uuid
+  tokenHash        String           @unique
+  status           InvitationStatus @default(PENDING)
+  expiresAt        DateTime         @db.Timestamptz
+  targetRole       String?
+  targetDepartment String?
+  createdAt        DateTime         @default(now()) @db.Timestamptz
+  tenant           Tenant           @relation(fields: [tenantId], references: [id])
+  questionnaire    Questionnaire    @relation(fields: [questionnaireId], references: [id])
+  createdBy        User             @relation(fields: [createdById], references: [id])
+  submission       Submission?
+
+  @@index([tenantId, status])
+  @@map("invitation")
+}
+
+model Submission {
+  id             String         @id @default(uuid(7)) @db.Uuid
+  tenantId       String         @db.Uuid
+  invitationId   String         @unique @db.Uuid
+  idempotencyKey String
+  consentAt      DateTime       @db.Timestamptz
+  consentVersion String
+  submittedAt    DateTime       @default(now()) @db.Timestamptz
+  tenant         Tenant         @relation(fields: [tenantId], references: [id])
+  invitation     Invitation     @relation(fields: [invitationId], references: [id])
+  candidate      Candidate?
+  answers        Answer[]
+  profile        ProfileResult?
+
+  @@index([tenantId, submittedAt(sort: Desc)])
+  @@map("submission")
+}
+
+model Candidate {
+  id           String     @id @default(uuid(7)) @db.Uuid
+  tenantId     String     @db.Uuid
+  submissionId String     @unique @db.Uuid
+  name         String
+  phone        String
+  email        String
+  jobTitle     String
+  department   String
+  birthDate    DateTime   @db.Date
+  tenant       Tenant     @relation(fields: [tenantId], references: [id])
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, jobTitle])
+  @@index([tenantId, department])
+  @@map("candidate")
+}
+
+model Answer {
+  id           String         @id @default(uuid(7)) @db.Uuid
+  submissionId String         @db.Uuid
+  groupId      String         @db.Uuid
+  optionId     String         @db.Uuid
+  rank         Int            @db.SmallInt
+  submission   Submission     @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  group        QuestionGroup  @relation(fields: [groupId], references: [id])
+  option       QuestionOption @relation(fields: [optionId], references: [id])
+
+  @@unique([submissionId, optionId])
+  @@unique([submissionId, groupId, rank])
+  @@map("answer")
+}
+
+model ProfileResult {
+  id                   String     @id @default(uuid(7)) @db.Uuid
+  submissionId         String     @unique @db.Uuid
+  scoreD               Int
+  scoreI               Int
+  scoreS               Int
+  scoreC               Int
+  primaryFactor        Factor
+  secondaryFactor      Factor
+  questionnaireVersion Int
+  calculatedAt         DateTime   @default(now()) @db.Timestamptz
+  submission           Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([primaryFactor])
+  @@map("profile_result")
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid(7)) @db.Uuid
+  userId    String    @db.Uuid
+  tokenHash String    @unique
+  expiresAt DateTime  @db.Timestamptz
+  revokedAt DateTime? @db.Timestamptz
+  createdAt DateTime  @default(now()) @db.Timestamptz
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_token")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  tenantId   String   @db.Uuid
+  userId     String?  @db.Uuid
+  action     String
+  entityType String?
+  entityId   String?
+  createdAt  DateTime @default(now()) @db.Timestamptz
+
+  @@index([tenantId, createdAt(sort: Desc)])
+  @@map("audit_log")
+}

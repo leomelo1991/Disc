@@ -1,0 +1,11 @@
+packages:
+  - 'frontend'
+  - 'backend'
+  - 'e2e'
+  - 'packages/*'
+allowBuilds:
+  esbuild: true
+  '@swc/core': true
+  '@prisma/engines': true
+  prisma: true
+  '@scarf/scarf': false

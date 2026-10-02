@@ -1,0 +1,9 @@
+node_modules
+dist
+.turbo
+coverage
+pnpm-lock.yaml
+**/generated
+**/migrations
+e2e/test-results
+e2e/playwright-report

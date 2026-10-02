@@ -1,0 +1,5 @@
+{
+  "extends": "@disc/config/tsconfig.node.json",
+  "compilerOptions": { "noEmit": true, "jsx": "react-jsx", "lib": ["ES2022", "DOM"] },
+  "include": ["backend/src", "frontend/src", "packages/*/src"]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@disc/e2e",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "e2e": "playwright test",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.0",
+    "@disc/config": "workspace:*",
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.8.0"
+  }
+}

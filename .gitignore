@@ -1,0 +1,9 @@
+node_modules
+dist
+.turbo
+.env
+*.log
+coverage
+backend/src/infra/prisma/generated
+test-results
+playwright-report

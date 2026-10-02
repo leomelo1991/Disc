@@ -1,0 +1,41 @@
+{
+  "name": "@disc/frontend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@disc/contracts": "workspace:*",
+    "@disc/core": "workspace:*",
+    "@hookform/resolvers": "^5.9.1",
+    "@sentry/react": "^11.1.0",
+    "@tanstack/react-query": "^5.80.0",
+    "qrcode": "^1.5.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-hook-form": "^7.89.0",
+    "react-router-dom": "^7.6.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@disc/config": "workspace:*",
+    "@tailwindcss/vite": "^4.1.0",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^4.5.0",
+    "jsdom": "^30.1.1",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.8.0",
+    "vite": "^6.3.0",
+    "vitest": "^3.2.0"
+  }
+}

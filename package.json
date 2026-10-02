@@ -1,0 +1,46 @@
+{
+  "name": "disc-platform",
+  "private": true,
+  "packageManager": "pnpm@12.8.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "eslint .",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "db:test:setup": "bash scripts/setup-test-db.sh",
+    "e2e": "pnpm --filter @disc/e2e e2e",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "deps:check": "depcruise backend/src frontend/src packages/disc-core/src packages/contracts/src --config .dependency-cruiser.cjs",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@disc/config": "workspace:*",
+    "@eslint/js": "^10.0.1",
+    "dependency-cruiser": "^18.5.0",
+    "eslint": "^10.11.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.12.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.9",
+    "turbo": "^2.5.0",
+    "typescript": "^5.8.0",
+    "typescript-eslint": "^8.71.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,mjs,cjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,css,html}": [
+      "prettier --write"
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "extends": "@disc/config/tsconfig.base.json",
+  "compilerOptions": { "noEmit": true, "module": "ESNext", "moduleResolution": "Bundler", "types": ["node"] },
+  "include": ["tests", "playwright.config.ts", "global-setup.ts"]
+}

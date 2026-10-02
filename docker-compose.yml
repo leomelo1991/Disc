@@ -1,0 +1,69 @@
+# Tudo local com um comando:  docker compose up --build
+#   Web:  http://localhost:8080        API/Swagger: http://localhost:3000/api/docs
+# Portas e segredos podem ser trocados por variáveis de ambiente (veja os padrões abaixo).
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: disc
+      POSTGRES_PASSWORD: disc
+      POSTGRES_DB: disc
+    ports: ['${POSTGRES_PORT:-5432}:5432']
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U disc']
+      interval: 5s
+      retries: 10
+
+  # Etapa única: aplica migrations, cria o questionário DISC e os dados fictícios da demonstração.
+  migrate:
+    build: { context: ., dockerfile: docker/backend.Dockerfile }
+    command: >
+      sh -c "pnpm --filter @disc/backend db:migrate &&
+             pnpm --filter @disc/backend db:seed &&
+             pnpm --filter @disc/backend db:seed:demo"
+    environment:
+      DATABASE_URL: postgres://disc:disc@postgres:5432/disc
+    depends_on:
+      postgres: { condition: service_healthy }
+    restart: 'no'
+
+  api:
+    build: { context: ., dockerfile: docker/backend.Dockerfile }
+    environment:
+      NODE_ENV: development # em produção o cookie de sessão exige HTTPS
+      PORT: 3000
+      DATABASE_URL: postgres://disc:disc@postgres:5432/disc
+      APP_DATABASE_URL: postgres://disc_app:disc_app@postgres:5432/disc
+      JWT_SECRET: ${JWT_SECRET:-troque-este-segredo-local-por-um-longo}
+      # Origem pública do site: usada nos links de convite e no CORS
+      WEB_ORIGIN: http://localhost:${WEB_PORT:-8080}
+    ports: ['${API_PORT:-3000}:3000']
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:3000/api/v1/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 5s
+      retries: 20
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+      args:
+        VITE_DEMO_EMAIL: demo@aurora.example
+        VITE_DEMO_PASSWORD: demo-disc-2026
+    ports: ['${WEB_PORT:-8080}:80']
+    depends_on:
+      api: { condition: service_healthy }
+
+volumes:
+  pgdata:
