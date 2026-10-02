@@ -1,5 +1,10 @@
 @import 'tailwindcss';
 
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  @apply bg-gradient-to-br from-indigo-50 via-violet-50 to-sky-50 bg-fixed text-slate-900 antialiased;
+}
+
+/* Faixa com as quatro cores do DISC (D, I, S, C), usada no topo das telas. */
+.disc-stripe {
+  background: linear-gradient(90deg, #dc2626 0 25%, #d97706 25% 50%, #16a34a 50% 75%, #2563eb 75% 100%);
 }

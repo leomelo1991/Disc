@@ -17,12 +17,21 @@ export function AdminLayout() {
 
   return (
     <div className="min-h-dvh pb-16 md:pb-0">
-      <header className="border-b border-slate-200 bg-white">
+      <div className="disc-stripe h-1" aria-hidden="true" />
+      <header className="border-b border-indigo-100 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-2">
-          <span className="font-semibold">DISC</span>
+          <span className="flex items-center gap-2 text-lg font-bold text-indigo-950">
+            <span aria-hidden="true" className="grid size-6 grid-cols-2 gap-0.5">
+              <i className="rounded-sm bg-red-600" />
+              <i className="rounded-sm bg-amber-500" />
+              <i className="rounded-sm bg-green-600" />
+              <i className="rounded-sm bg-blue-600" />
+            </span>
+            DISC
+          </span>
           <nav
             aria-label="Principal"
-            className="fixed inset-x-0 bottom-0 z-10 flex border-t border-slate-200 bg-white md:static md:border-0"
+            className="fixed inset-x-0 bottom-0 z-10 flex border-t border-indigo-100 bg-white md:static md:border-0"
           >
             <NavLink to="/admin" end className={link}>
               Painel
@@ -49,7 +58,7 @@ export function AdminLayout() {
           </Button>
         </div>
       </header>
-      <Page wide>
+      <Page wide backdrop={{ intensity: 'subtle', variant: 1 }}>
         <Outlet />
       </Page>
     </div>

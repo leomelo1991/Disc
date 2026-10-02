@@ -36,7 +36,7 @@ function FactorCard({ role, block, tied }: { role: 'principal' | 'secundário'; 
 
 export function Result({ company, summary }: { company: string; summary: CandidateSummary }) {
   return (
-    <Page>
+    <Page backdrop={{ intensity: 'normal', variant: 2 }}>
       <p className="text-sm text-emerald-700">Respostas enviadas para {company}. Obrigado!</p>
       <h1 className="mt-2 text-2xl font-bold">{summary.title}</h1>
       <p className="mt-1 font-medium text-slate-600">{summary.combined.headline}</p>

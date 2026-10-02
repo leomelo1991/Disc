@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { DiscBackdrop } from '../../shared/ui';
 
 const STEPS = [
   {
@@ -48,9 +49,18 @@ const FEATURES = [
 export function Landing() {
   const hasDemo = Boolean(import.meta.env.VITE_DEMO_EMAIL);
   return (
-    <div className="min-h-dvh bg-white text-slate-900">
+    <div className="min-h-dvh text-slate-900">
+      <div className="disc-stripe h-1.5" aria-hidden="true" />
       <header className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-        <span className="text-lg font-bold">DISC</span>
+        <span className="flex items-center gap-2 text-xl font-bold text-indigo-950">
+          <span aria-hidden="true" className="grid size-7 grid-cols-2 gap-0.5">
+            <i className="rounded-sm bg-red-600" />
+            <i className="rounded-sm bg-amber-500" />
+            <i className="rounded-sm bg-green-600" />
+            <i className="rounded-sm bg-blue-600" />
+          </span>
+          DISC
+        </span>
         <Link
           to="/login"
           className="inline-flex min-h-11 items-center rounded-lg px-3 font-medium text-indigo-700 hover:bg-indigo-50"
@@ -60,41 +70,47 @@ export function Landing() {
       </header>
 
       <main>
-        <section className="mx-auto max-w-5xl px-4 pb-12 pt-8 md:pt-16">
-          <h1 className="max-w-3xl text-3xl font-bold leading-tight md:text-5xl">
-            Teste de perfil comportamental DISC, do link no WhatsApp ao relatório pronto
-          </h1>
-          <p className="mt-4 max-w-2xl text-lg text-slate-700">
-            Envie o teste, acompanhe quem respondeu e receba o perfil já calculado, com informações úteis para
-            recrutadores e para o próprio candidato.
-          </p>
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <Link
-              to="/login?cadastro=1"
-              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-indigo-600 px-5 font-medium text-white hover:bg-indigo-700"
-            >
-              Cadastrar minha empresa
-            </Link>
-            <Link
-              to={hasDemo ? '/login?demo=1' : '/login'}
-              className="inline-flex min-h-11 items-center justify-center rounded-lg border border-slate-300 px-5 font-medium text-slate-900 hover:bg-slate-50"
-            >
-              {hasDemo ? 'Ver a demonstração' : 'Já tenho conta'}
-            </Link>
+        <section className="relative isolate overflow-hidden">
+          <DiscBackdrop />
+          <div className="mx-auto max-w-5xl px-4 pb-12 pt-8 md:pt-16">
+            <h1 className="max-w-3xl text-3xl font-extrabold leading-tight text-indigo-950 md:text-5xl">
+              Teste de perfil comportamental DISC, do link no WhatsApp ao relatório pronto
+            </h1>
+            <p className="mt-4 max-w-2xl text-lg text-slate-700">
+              Envie o teste, acompanhe quem respondeu e receba o perfil já calculado, com informações úteis para
+              recrutadores e para o próprio candidato.
+            </p>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <Link
+                to="/login?cadastro=1"
+                className="inline-flex min-h-11 items-center justify-center rounded-lg bg-gradient-to-r from-indigo-600 to-violet-600 px-5 font-medium text-white shadow-md shadow-indigo-600/30 hover:from-indigo-700 hover:to-violet-700"
+              >
+                Cadastrar minha empresa
+              </Link>
+              <Link
+                to={hasDemo ? '/login?demo=1' : '/login'}
+                className="inline-flex min-h-11 items-center justify-center rounded-lg border border-indigo-200 bg-white/80 px-5 font-medium text-indigo-900 hover:bg-white"
+              >
+                {hasDemo ? 'Ver a demonstração' : 'Já tenho conta'}
+              </Link>
+            </div>
           </div>
         </section>
 
-        <section aria-labelledby="como" className="bg-slate-50 py-12">
+        <section aria-labelledby="como" className="bg-white/50 py-12">
           <div className="mx-auto max-w-5xl px-4">
-            <h2 id="como" className="text-2xl font-bold">
+            <h2 id="como" className="text-2xl font-bold text-indigo-950">
               Como funciona
             </h2>
             <ol className="mt-6 grid gap-4 md:grid-cols-3">
               {STEPS.map((s) => (
-                <li key={s.n} className="rounded-xl border border-slate-200 bg-white p-4">
+                <li
+                  key={s.n}
+                  className="rounded-2xl border border-indigo-100 border-t-4 border-t-indigo-500 bg-white/90 p-5 shadow-md shadow-indigo-900/5"
+                >
                   <span
                     aria-hidden="true"
-                    className="inline-flex size-8 items-center justify-center rounded-full bg-indigo-700 font-bold text-white"
+                    className="inline-flex size-9 items-center justify-center rounded-full bg-gradient-to-br from-indigo-600 to-violet-600 font-bold text-white"
                   >
                     {s.n}
                   </span>
@@ -108,12 +124,12 @@ export function Landing() {
 
         <section aria-labelledby="recursos" className="py-12">
           <div className="mx-auto max-w-5xl px-4">
-            <h2 id="recursos" className="text-2xl font-bold">
+            <h2 id="recursos" className="text-2xl font-bold text-indigo-950">
               O que você ganha
             </h2>
             <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {FEATURES.map((f) => (
-                <li key={f.title} className="rounded-xl border border-slate-200 p-4">
+                <li key={f.title} className="rounded-2xl border border-indigo-100 bg-white/70 p-5 shadow-sm">
                   <h3 className="font-semibold">{f.title}</h3>
                   <p className="mt-1 text-slate-700">{f.text}</p>
                 </li>
@@ -123,7 +139,7 @@ export function Landing() {
         </section>
       </main>
 
-      <footer className="border-t border-slate-200 py-6">
+      <footer className="border-t border-indigo-100 bg-white/60 py-6">
         <p className="mx-auto max-w-5xl px-4 text-sm text-slate-600">
           O DISC descreve preferências de comportamento. Não é um diagnóstico psicológico nem deve ser o único critério
           de seleção.

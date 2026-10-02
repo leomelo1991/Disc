@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { ApiError } from '../../../shared/api/http';
-import { Button, ErrorBox, Input, Page } from '../../../shared/ui';
+import { Button, Card, DiscBackdrop, ErrorBox, Input, Page } from '../../../shared/ui';
 import { useSession } from '../session';
 
 export function Login() {
@@ -61,44 +61,49 @@ export function Login() {
   }
 
   return (
-    <Page>
-      <h1 className="mb-4 text-2xl font-bold">{mode === 'login' ? 'Entrar' : 'Cadastrar empresa'}</h1>
-      <form onSubmit={onSubmit} className="space-y-4">
-        {mode === 'register' && (
-          <>
-            <Input label="Nome da empresa" name="companyName" required />
-            <Input label="Seu nome" name="adminName" autoComplete="name" required />
-          </>
-        )}
-        <Input label="E-mail" name="email" type="email" autoComplete="email" required />
-        <Input
-          label="Senha"
-          name="password"
-          type="password"
-          minLength={8}
-          autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-          required
-        />
-        {error && <ErrorBox>{error}</ErrorBox>}
-        <Button type="submit" className="w-full" disabled={busy}>
-          {busy ? 'Aguarde…' : mode === 'login' ? 'Entrar' : 'Criar conta'}
-        </Button>
-      </form>
-      <Button
-        variant="ghost"
-        className="mt-3 w-full"
-        onClick={() => {
-          setMode(mode === 'login' ? 'register' : 'login');
-          setError(null);
-        }}
-      >
-        {mode === 'login' ? 'Cadastrar minha empresa' : 'Já tenho conta'}
-      </Button>
-      {demoEmail && demoPassword && (
-        <Button variant="secondary" className="mt-3 w-full" disabled={busy} onClick={() => void enterDemo()}>
-          Entrar na demonstração (dados fictícios)
-        </Button>
-      )}
-    </Page>
+    <div className="relative isolate min-h-dvh overflow-hidden">
+      <DiscBackdrop intensity="subtle" />
+      <Page>
+        <Card>
+          <h1 className="mb-4 text-2xl font-bold">{mode === 'login' ? 'Entrar' : 'Cadastrar empresa'}</h1>
+          <form onSubmit={onSubmit} className="space-y-4">
+            {mode === 'register' && (
+              <>
+                <Input label="Nome da empresa" name="companyName" required />
+                <Input label="Seu nome" name="adminName" autoComplete="name" required />
+              </>
+            )}
+            <Input label="E-mail" name="email" type="email" autoComplete="email" required />
+            <Input
+              label="Senha"
+              name="password"
+              type="password"
+              minLength={8}
+              autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+              required
+            />
+            {error && <ErrorBox>{error}</ErrorBox>}
+            <Button type="submit" className="w-full" disabled={busy}>
+              {busy ? 'Aguarde…' : mode === 'login' ? 'Entrar' : 'Criar conta'}
+            </Button>
+          </form>
+          <Button
+            variant="ghost"
+            className="mt-3 w-full"
+            onClick={() => {
+              setMode(mode === 'login' ? 'register' : 'login');
+              setError(null);
+            }}
+          >
+            {mode === 'login' ? 'Cadastrar minha empresa' : 'Já tenho conta'}
+          </Button>
+          {demoEmail && demoPassword && (
+            <Button variant="secondary" className="mt-3 w-full" disabled={busy} onClick={() => void enterDemo()}>
+              Entrar na demonstração (dados fictícios)
+            </Button>
+          )}
+        </Card>
+      </Page>
+    </div>
   );
 }

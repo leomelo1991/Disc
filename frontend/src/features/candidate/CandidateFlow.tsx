@@ -32,7 +32,7 @@ export function CandidateFlow() {
     );
   if (invitation.isError) {
     return (
-      <Page>
+      <Page backdrop={{ intensity: 'subtle', variant: 3 }}>
         <h1 className="text-xl font-semibold">Link indisponível</h1>
         <p className="mt-2 text-slate-600">
           Este link é inválido, expirou ou já foi utilizado. Peça um novo link a quem o enviou.
@@ -86,7 +86,7 @@ function Flow({ token, invitation }: { token: string; invitation: PublicInvitati
   if (summary) return <Result company={invitation.company} summary={summary} />;
 
   return (
-    <Page>
+    <Page backdrop={{ intensity: 'subtle', variant: 2 }}>
       {draft.step === 'welcome' && (
         <section className="space-y-4">
           <h1 className="text-2xl font-bold">Teste de perfil comportamental</h1>
