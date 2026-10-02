@@ -1,4 +1,4 @@
-import { Controller, Get, NotFoundException, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, NotFoundException, Param, UseGuards } from '@nestjs/common';
 import { PrismaService } from '../../infra/prisma/prisma.service.js';
 import { AuthGuard, Roles } from '../identity/presentation/auth.guard.js';
 
@@ -6,7 +6,7 @@ import { AuthGuard, Roles } from '../identity/presentation/auth.guard.js';
 @Controller('assessment-types')
 @UseGuards(AuthGuard)
 export class CatalogController {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
   @Get()
   async list() {

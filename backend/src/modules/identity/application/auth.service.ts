@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ApplicationError } from '../../../shared/application-error.js';
 import { slugify } from '../../../shared/slug.js';
 import { generateToken, sha256 } from '../../../shared/tokens.js';
@@ -17,9 +17,9 @@ const REFRESH_TTL_MS = 30 * 24 * 3600 * 1000;
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly repo: IdentityRepository,
-    private readonly hasher: PasswordHasher,
-    private readonly tokens: AccessTokenService,
+    @Inject(IdentityRepository) private readonly repo: IdentityRepository,
+    @Inject(PasswordHasher) private readonly hasher: PasswordHasher,
+    @Inject(AccessTokenService) private readonly tokens: AccessTokenService,
   ) {}
 
   async registerTenant(input: { companyName: string; adminName: string; email: string; password: string }) {

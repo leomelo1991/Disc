@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ApplicationError } from '../../../shared/application-error.js';
 import { sha256 } from '../../../shared/tokens.js';
 import { assertInvitationAvailable } from '../domain/invitation.js';
@@ -7,8 +7,8 @@ import { Clock, DeliveryRepository } from './ports.js';
 @Injectable()
 export class GetPublicInvitation {
   constructor(
-    private readonly repo: DeliveryRepository,
-    private readonly clock: Clock,
+    @Inject(DeliveryRepository) private readonly repo: DeliveryRepository,
+    @Inject(Clock) private readonly clock: Clock,
   ) {}
 
   async execute(token: string) {

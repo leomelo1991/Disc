@@ -1,12 +1,12 @@
 import { randomUUID } from 'node:crypto';
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { Prisma } from '../../../infra/prisma/generated/client.js';
 import { PrismaService } from '../../../infra/prisma/prisma.service.js';
 import { IdentityRepository, type UserRecord } from '../application/ports.js';
 
 @Injectable()
 export class PrismaIdentityRepository extends IdentityRepository {
-  constructor(private readonly prisma: PrismaService) {
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
     super();
   }
 

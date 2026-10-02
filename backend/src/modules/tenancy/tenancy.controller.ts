@@ -3,6 +3,7 @@ import {
   ConflictException,
   Controller,
   Get,
+  Inject,
   NotFoundException,
   Param,
   ParseUUIDPipe,
@@ -24,8 +25,8 @@ const userSelect = { id: true, name: true, email: true, role: true, active: true
 @UseGuards(AuthGuard)
 export class TenancyController {
   constructor(
-    private readonly prisma: PrismaService,
-    private readonly hasher: PasswordHasher,
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(PasswordHasher) private readonly hasher: PasswordHasher,
   ) {}
 
   @Get('tenant')

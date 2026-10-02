@@ -68,10 +68,14 @@ pnpm --filter @disc/backend db:seed:demo            # use --reset para recriar
 
 Cadastre sua empresa em `http://localhost:5173/login`, gere um link em **Convites** e abra-o no celular.
 
+## Deploy na Vercel
+
+O repositório já traz o `vercel.json` (dois serviços: `backend` em `/api/*` e `frontend` em `/*`, no mesmo domínio). Passo a passo, variáveis de ambiente, banco (Neon) e agendador em [`docs/11-deploy-vercel.md`](docs/11-deploy-vercel.md).
+
 ## Testes
 
 ```bash
-pnpm db:test:setup      # cria/migra/popula o banco disc_test
+pnpm db:test:setup      # cria/migra/popula o banco disc_test (os testes também fazem isso sozinhos se o banco sumir)
 pnpm test               # unitários + integração (backend usa Postgres real)
 pnpm lint && pnpm format:check && pnpm deps:check   # qualidade e fronteiras
 pnpm typecheck && pnpm build

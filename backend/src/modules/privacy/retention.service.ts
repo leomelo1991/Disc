@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { env } from '../../env.js';
 import { PrismaService } from '../../infra/prisma/prisma.service.js';
 
@@ -10,10 +10,11 @@ export class RetentionService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(RetentionService.name);
   private timer?: NodeJS.Timeout;
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
   onModuleInit() {
-    if (env.NODE_ENV === 'test') return;
+    // Em serverless a instância não vive 24 h: a limpeza roda pelo agendador (GET /internal/cron/purge).
+    if (env.NODE_ENV === 'test' || process.env.VERCEL) return;
     this.timer = setInterval(() => void this.runDaily().catch((e) => this.logger.error(e)), DAY_MS);
     this.timer.unref();
   }
@@ -22,9 +23,12 @@ export class RetentionService implements OnModuleInit, OnModuleDestroy {
     clearInterval(this.timer);
   }
 
-  private async runDaily() {
-    await this.purgeExpired();
-    await this.purgePresentationTenants();
+  /** Limpeza completa: retenção por empresa (LGPD) e empresas de apresentação vencidas. */
+  async runDaily() {
+    return {
+      submissions: await this.purgeExpired(),
+      presentationTenants: await this.purgePresentationTenants(),
+    };
   }
 
   /** Apaga as empresas de apresentação (página pública /apresentacao) com mais de 7 dias, e tudo que dependia delas. */

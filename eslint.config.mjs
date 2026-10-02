@@ -27,11 +27,11 @@ export default tseslint.config(
     },
   },
   {
-    files: ['backend/**/*.ts', 'packages/**/*.ts', 'e2e/**/*.ts', '*.mjs', '*.cjs'],
+    files: ['backend/**/*.{ts,mjs}', 'packages/**/*.ts', 'e2e/**/*.ts', '*.mjs', '*.cjs'],
     languageOptions: { globals: globals.node },
   },
   // Scripts de seed e o main podem usar console para saída de CLI
-  { files: ['backend/prisma/**/*.ts'], rules: { 'no-console': 'off' } },
+  { files: ['backend/prisma/**/*.ts', 'backend/scripts/**/*.mjs'], rules: { 'no-console': 'off' } },
   {
     files: ['frontend/**/*.{ts,tsx}'],
     languageOptions: { globals: globals.browser },

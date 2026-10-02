@@ -236,3 +236,5 @@ export const presentationLinkSchema = z.object({
   expiresAt: z.string(),
 });
 export type PresentationLink = z.infer<typeof presentationLinkSchema>;
+
+export const cronPurgeSchema = z.object({ submissions: z.number().int(), presentationTenants: z.number().int() });

@@ -28,6 +28,7 @@
 
 - [x] Perfis combinados: 12 variantes ordenadas (DI, DS…), empate técnico de 5 pp com principal + secundário + leitura combinada
 - [x] Página pública `/apresentacao` (nome da empresa + link com QR code) com empresas de demonstração descartáveis
+- [x] Deploy na Vercel (serviços `backend` + `frontend`), agendador de limpeza e `trust proxy`; guia em `docs/11-deploy-vercel.md` (a validar no primeiro deploy real)
 - [x] LGPD (retenção por empresa, exclusão, consentimento)
 - [x] Logs estruturados com redação, rate limit, auditoria (métricas Prometheus e Sentry opcionais; traces pendentes)
 - [x] Demo com dados fictícios (`db:seed:demo`) e landing page. **Pendente:** README comercial

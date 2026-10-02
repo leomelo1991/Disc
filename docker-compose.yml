@@ -35,6 +35,7 @@ services:
     environment:
       NODE_ENV: development # em produção o cookie de sessão exige HTTPS
       PORT: 3000
+      TRUST_PROXY_HOPS: 1 # o nginx do serviço web fica na frente: o IP do cliente vem de X-Forwarded-For
       DATABASE_URL: postgres://disc:disc@postgres:5432/disc
       APP_DATABASE_URL: postgres://disc_app:disc_app@postgres:5432/disc
       JWT_SECRET: ${JWT_SECRET:-troque-este-segredo-local-por-um-longo}

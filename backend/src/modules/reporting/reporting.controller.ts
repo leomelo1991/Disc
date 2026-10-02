@@ -4,6 +4,7 @@ import {
   Get,
   Header,
   HttpCode,
+  Inject,
   NotFoundException,
   Param,
   ParseUUIDPipe,
@@ -64,7 +65,7 @@ function profileOf(p: { scoreD: number; scoreI: number; scoreS: number; scoreC: 
 @Controller('reports')
 @UseGuards(AuthGuard)
 export class ReportingController {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
   @Get('results')
   async list(@Auth() auth: AccessClaims, @Query(new ZodValidationPipe(reportQuerySchema)) q: ReportQuery) {

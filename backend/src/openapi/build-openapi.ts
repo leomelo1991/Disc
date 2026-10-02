@@ -73,6 +73,16 @@ export const ROUTES: Route[] = [
     errors: [404, 422, 429],
   },
   {
+    method: 'get',
+    path: '/internal/cron/purge',
+    tag: 'Saúde',
+    summary:
+      'Agendador (Vercel Cron): limpeza de retenção (LGPD) e das empresas de apresentação. Bearer CRON_SECRET; 404 sem CRON_SECRET',
+    access: 'public',
+    ok: { 200: c.cronPurgeSchema },
+    errors: [401, 404],
+  },
+  {
     method: 'post',
     path: '/auth/register-tenant',
     tag: 'Autenticação',

@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Headers, HttpCode, Param, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Headers, HttpCode, Inject, Param, Post } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { submitAssessmentSchema, type SubmitAssessmentDto } from '@disc/contracts';
 import { MetricsService } from '../../../shared/metrics.service.js';
@@ -10,9 +10,9 @@ import { SubmitAssessment } from '../application/submit-assessment.js';
 @Throttle({ default: { limit: 30, ttl: 60_000 } })
 export class PublicController {
   constructor(
-    private readonly getInvitation: GetPublicInvitation,
-    private readonly submit: SubmitAssessment,
-    private readonly metrics: MetricsService,
+    @Inject(GetPublicInvitation) private readonly getInvitation: GetPublicInvitation,
+    @Inject(SubmitAssessment) private readonly submit: SubmitAssessment,
+    @Inject(MetricsService) private readonly metrics: MetricsService,
   ) {}
 
   @Get(':token')

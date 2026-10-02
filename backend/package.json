@@ -6,12 +6,13 @@
     "build": "prisma generate && tsc -p tsconfig.build.json",
     "dev": "prisma generate && nest start --watch",
     "typecheck": "prisma generate && tsc --noEmit",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run --passWithNoTests && vitest run --config vitest.nometadata.config.ts",
     "prisma:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
     "db:seed": "prisma db seed",
     "start": "node dist/main.js",
-    "db:seed:demo": "tsx prisma/seed-demo.ts"
+    "db:seed:demo": "tsx prisma/seed-demo.ts",
+    "test:nometadata": "vitest run --config vitest.nometadata.config.ts"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.3.4",

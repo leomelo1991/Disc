@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import type { SubmitAssessmentDto } from '@disc/contracts';
 import { buildProfile, calculateProfile, candidateSummary, InvalidAnswersError } from '@disc/core';
 import { ApplicationError } from '../../../shared/application-error.js';
@@ -9,8 +9,8 @@ import { Clock, DeliveryRepository } from './ports.js';
 @Injectable()
 export class SubmitAssessment {
   constructor(
-    private readonly repo: DeliveryRepository,
-    private readonly clock: Clock,
+    @Inject(DeliveryRepository) private readonly repo: DeliveryRepository,
+    @Inject(Clock) private readonly clock: Clock,
   ) {}
 
   async execute(token: string, idempotencyKey: string, dto: SubmitAssessmentDto) {

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "backend": {
+      "root": "backend",
+      "framework": "nestjs",
+      "installCommand": "HUSKY=0 pnpm install --frozen-lockfile --filter @disc/backend...",
+      "buildCommand": "pnpm --filter @disc/backend... build"
+    },
+    "frontend": {
+      "root": "frontend",
+      "framework": "vite",
+      "installCommand": "HUSKY=0 pnpm install --frozen-lockfile --filter @disc/frontend...",
+      "buildCommand": "pnpm --filter @disc/frontend... build",
+      "outputDirectory": "dist",
+      "rewrites": [
+        {
+          "source": "/(.*)",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "backend"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "frontend"
+      }
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/v1/internal/cron/purge",
+      "schedule": "0 3 * * *"
+    }
+  ]
+}

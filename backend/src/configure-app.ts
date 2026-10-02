@@ -12,6 +12,8 @@ export const docsEnabled = () => (env.ENABLE_DOCS ? env.ENABLE_DOCS === 'true' :
 /** Configuração HTTP compartilhada entre main.ts e os testes e2e. */
 export function configureApp(app: INestApplication) {
   app.setGlobalPrefix('api/v1');
+  // Atrás de proxy (nginx, borda da Vercel) o IP real do cliente vem em X-Forwarded-For.
+  if (env.TRUST_PROXY_HOPS > 0) app.getHttpAdapter().getInstance().set('trust proxy', env.TRUST_PROXY_HOPS);
 
   // CSP estrita em toda a API; o Swagger UI precisa de scripts/estilos inline, então só /api/docs é relaxado.
   const strict = helmet();

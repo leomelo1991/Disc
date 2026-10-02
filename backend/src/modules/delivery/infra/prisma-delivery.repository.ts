@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Prisma } from '../../../infra/prisma/generated/client.js';
 import { PrismaService } from '../../../infra/prisma/prisma.service.js';
 import {
@@ -12,7 +12,7 @@ import { InvitationUnavailableError } from '../domain/invitation.js';
 
 @Injectable()
 export class PrismaDeliveryRepository extends DeliveryRepository {
-  constructor(private readonly prisma: PrismaService) {
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {
     super();
   }
 

@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Inject, Post } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { createPresentationSchema, type CreatePresentationDto } from '@disc/contracts';
 import { env } from '../../env.js';
@@ -24,8 +24,8 @@ export const presentationEnabled = () =>
 @Controller('public/presentation')
 export class PresentationController {
   constructor(
-    private readonly prisma: PrismaService,
-    private readonly metrics: MetricsService,
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(MetricsService) private readonly metrics: MetricsService,
   ) {}
 
   @Post()

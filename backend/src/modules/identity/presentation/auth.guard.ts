@@ -1,11 +1,12 @@
 import {
   CanActivate,
+  createParamDecorator,
   ExecutionContext,
   ForbiddenException,
+  Inject,
   Injectable,
   SetMetadata,
   UnauthorizedException,
-  createParamDecorator,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import type { Request } from 'express';
@@ -23,8 +24,8 @@ export interface AuthedRequest extends Request {
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    private readonly auth: AuthService,
-    private readonly reflector: Reflector,
+    @Inject(AuthService) private readonly auth: AuthService,
+    @Inject(Reflector) private readonly reflector: Reflector,
   ) {}
 
   async canActivate(ctx: ExecutionContext) {

@@ -12,7 +12,7 @@ export type TenantTx = Prisma.TransactionClient;
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
-    super({ adapter: new PrismaPg({ connectionString: env.APP_DATABASE_URL }) });
+    super({ adapter: new PrismaPg({ connectionString: env.APP_DATABASE_URL, max: env.DB_POOL_MAX }) });
   }
 
   async onModuleInit() {

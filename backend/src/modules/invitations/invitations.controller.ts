@@ -1,13 +1,14 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
+  Inject,
   NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
   Query,
-  Body,
   UseGuards,
 } from '@nestjs/common';
 import { createInvitationSchema, invitationListQuerySchema, type CreateInvitationDto } from '@disc/contracts';
@@ -23,8 +24,8 @@ import type { AccessClaims } from '../identity/application/auth.service.js';
 @UseGuards(AuthGuard)
 export class InvitationsController {
   constructor(
-    private readonly prisma: PrismaService,
-    private readonly metrics: MetricsService,
+    @Inject(PrismaService) private readonly prisma: PrismaService,
+    @Inject(MetricsService) private readonly metrics: MetricsService,
   ) {}
 
   @Post()
