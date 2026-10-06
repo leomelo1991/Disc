@@ -4,7 +4,8 @@ import { build } from 'esbuild';
 
 await build({
   entryPoints: ['src/main.ts'],
-  outfile: 'dist/main.js',
+  // Na Vercel o entrypoint precisa existir antes do build: server.js (placeholder versionado) é sobrescrito aqui.
+  outfile: process.env.VERCEL ? 'server.js' : 'dist/main.js',
   bundle: true,
   platform: 'node',
   format: 'cjs',

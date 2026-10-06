@@ -4,7 +4,7 @@
     "backend": {
       "root": "backend",
       "framework": "nestjs",
-      "entrypoint": "dist/main.js",
+      "entrypoint": "server.js",
       "installCommand": "HUSKY=0 pnpm install --frozen-lockfile --filter @disc/backend...",
       "buildCommand": "pnpm --filter @disc/backend... build"
     },

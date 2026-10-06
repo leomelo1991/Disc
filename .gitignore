@@ -7,3 +7,4 @@ coverage
 backend/src/infra/prisma/generated
 test-results
 playwright-report
+backend/server.js.map
