@@ -6,8 +6,13 @@ import { Button, Card, DiscBackdrop, ErrorBox, Input } from '../../shared/ui';
 
 function errorText(e: unknown): string {
   if (e instanceof ApiError) {
+    if (e.status === 404 && /question/i.test(e.message)) {
+      return 'O questionário DISC não está cadastrado neste ambiente (falta rodar o seed do banco).';
+    }
     if (e.status === 404) return 'A página de apresentação está desativada neste ambiente.';
     if (e.status === 429) return 'Muitas tentativas ou limite diário de demonstrações atingido. Aguarde um pouco.';
+    if (e.status >= 500)
+      return 'Erro no servidor (provavelmente banco de dados não configurado). Veja os logs da Vercel.';
     if (e.status === 422) return 'Informe o nome da empresa (de 2 a 120 caracteres).';
   }
   return 'Não foi possível gerar o link agora. Tente novamente.';
